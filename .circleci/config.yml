@@ -24,9 +24,6 @@ jobs:
               echo "Undefined stage"
             fi
             echo 'export CI=false' >> ~/.bashrc
-      - run:
-          name: Copy Dist Files to AWS S3 Buckets
-          command: |
             source ~/.bashrc;
             aws s3  sync ./a/ s3://$STAGE-staticu/img --delete --profile default
 
