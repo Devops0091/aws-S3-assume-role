@@ -1,36 +1,24 @@
-version: 2.1
+version: '2.1'
 orbs:
-  aws-cli: underw8/aws-assume-role@0.1.0
+  aws-cli: circleci/aws-cli@3.1
 jobs:
-  static-code-pipline:
+  configure-role-arn:
     executor: aws-cli/default
     steps:
       - checkout
-      - aws-cli/assume:
+      - aws-cli/setup:
           profile-name: default
-      - run:
-          name: Setup Stage
-          command: |
-            if [ $CIRCLE_BRANCH == "dev" ]
-            then
-              STAGE=dev;
-            elif [ $CIRCLE_BRANCH == "qa" ]
-            then
-              STAGE=qa;
-            elif [ $CIRCLE_BRANCH == "main" ] || [ $CIRCLE_BRANCH == "master" ]
-            then
-              STAGE=prod;
-            else
-              echo "Undefined stage"
-            fi
-            echo 'export CI=false' >> ~/.bashrc
-            source ~/.bashrc;
-            aws s3  sync ./a/ s3://$STAGE-staticu/img --delete --profile default
-
+      - aws-cli/role-arn-setup:
+          profile-name: new-profile
+          role-arn: $DEV_AWS_STS_ROLE_ARN
+          source-profile: default
+      - run: >-
+          aws sts assume-role --role-arn  $DEV_AWS_STS_ROLE_ARN --role-session-name AWSCLI-Session
+          aws s3 ls
 workflows:
   aws-cli:
     jobs:
-      - static-code-pipline:
+      - configure-role-arn:
           context: aws
           filters:
             branches:
