@@ -11,8 +11,7 @@ jobs:
       - run:
           name: Setup Stage
           command: |
-
-             ROLE_ARN='$DEV_AWS_STS_ROLE_ARN';
+             ROLE_ARN=$DEV_AWS_STS_ROLE_ARN;
              echo $ROLE_ARN;
 
 workflows:
