@@ -28,7 +28,7 @@ jobs:
           name: Copy Dist Files to AWS S3 Buckets
           command: |
             source ~/.bashrc;
-            aws s3 ls --profile default;
+            aws s3 ls --profile default
 
 workflows:
   aws-cli:
