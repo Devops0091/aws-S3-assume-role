@@ -12,7 +12,8 @@ jobs:
           name: Setup Stage
           command: |
 
-             ROLE_ARN=$DEV_AWS_STS_ROLE_ARN;
+             ROLE_ARN='$DEV_AWS_STS_ROLE_ARN';
+             echo $ROLE_ARN;
    
              CREDENTIALS="$(aws sts assume-role --role-arn $ROLE_ARN --role-session-name build-$CIRCLE_PROJECT_REPONAME-$CIRCLE_BUILD_NUM | jq '.Credentials')"
            
@@ -21,8 +22,6 @@ jobs:
              echo "export AWS_SECRET_ACCESS_KEY=$(echo $CREDENTIALS | jq -r '.SecretAccessKey')" >> $BASH_ENV
    
              echo "export AWS_SESSION_TOKEN=$(echo $CREDENTIALS | jq -r '.SessionToken')" >> $BASH_ENV
-   
-             aws s3  sync ./a/ s3://dev-staticu/img --delete;
 workflows:
   aws-cli:
     jobs:
