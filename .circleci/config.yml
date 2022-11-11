@@ -35,11 +35,11 @@ workflows:
     jobs:
       - static-code-pipline:
           context: aws
-            filters:
-              branches:
-                only:
-                  - dev
-                  - qa
-                  - main
-                  - master
-                  - v2
+          filters:
+            branches:
+              only:
+                - dev
+                - qa
+                - main
+                - master
+                - v2
