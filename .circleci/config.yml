@@ -10,6 +10,14 @@ jobs:
           name: Setup Stage
           command: |
              ROLE_ARN=$DEV_AWS_STS_ROLE_ARN;
+             CREDENTIALS=$(aws sts assume-role --role-arn $ROLE_ARN --role-session-name build-$CIRCLE_PROJECT_REPONAME-$CIRCLE_BUILD_NUM | jq '.Credentials')
+             export AWS_ACCESS_KEY_ID=$(echo $temp_role | jq -r .Credentials.AccessKeyId)
+             export AWS_SECRET_ACCESS_KEY=$(echo $temp_role | jq -r .Credentials.SecretAccessKey)
+             export AWS_SESSION_TOKEN=$(echo $temp_role | jq -r .Credentials.SessionToken)
+             aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID --profle default
+             aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY --profle default
+             aws configure set aws_session_token $AWS_SESSION_TOKEN --profle default
+             aws s3 ls --profle default
 
 workflows:
   aws-cli:
