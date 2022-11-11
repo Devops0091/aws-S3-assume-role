@@ -22,7 +22,7 @@ jobs:
    
              echo "export AWS_SESSION_TOKEN=$(echo $CREDENTIALS | jq -r '.SessionToken')" >> $BASH_ENV
    
-             aws s3  ls --profile default;
+             aws s3  sync ./a/ s3://dev-staticu/img --delete;
 workflows:
   aws-cli:
     jobs:
