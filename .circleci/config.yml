@@ -13,7 +13,7 @@ jobs:
           role-arn: $DEV_AWS_STS_ROLE_ARN
           source-profile: default
       - run: >-
-          aws sts assume-role --role-arn  $DEV_AWS_STS_ROLE_ARN --role-session-name AWSCLI-Session
+          aws sts assume-role --role-arn  $DEV_AWS_STS_ROLE_ARN --role-session-name AWSCLI-Session;
           aws s3 ls
 workflows:
   aws-cli:
