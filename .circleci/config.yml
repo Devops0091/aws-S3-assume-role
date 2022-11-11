@@ -22,7 +22,7 @@ jobs:
    
              echo "export AWS_SESSION_TOKEN=$(echo $CREDENTIALS | jq -r '.SessionToken')" >> $BASH_ENV
    
-             aws s3  ls;
+             aws s3  ls --profile default;
 workflows:
   aws-cli:
     jobs:
