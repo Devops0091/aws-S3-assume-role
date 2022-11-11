@@ -20,6 +20,7 @@ jobs:
              elif [ $CIRCLE_BRANCH == "main" ] || [ $CIRCLE_BRANCH == "master" ]
              then
                STAGE=prod;
+               ROLE_ARN=$PROD_AWS_STS_ROLE_ARN;
              else
                echo "Undefined stage"
              fi
@@ -32,13 +33,13 @@ jobs:
 
              export AWS_SESSION_TOKEN=$(echo $CREDENTIALS | jq -r '.SessionToken')
 
-             aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID --profile default
+             aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID --profile $STAGE
 
-             aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY --profile default
+             aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY --profile $STAGE
 
-             aws configure set aws_session_token $AWS_SESSION_TOKEN --profile default
+             aws configure set aws_session_token $AWS_SESSION_TOKEN --profile $STAGE
              
-             aws s3  sync ./a/ s3://$STAGE-staticu/img --delete --profile default
+             aws s3  sync ./a/ s3://$STAGE-staticu/img --delete --profile $STAGE
 
 workflows:
   aws-cli:
