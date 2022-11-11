@@ -25,7 +25,7 @@ jobs:
 
              aws configure set aws_session_token $AWS_SESSION_TOKEN --profile default
              
-             aws s3 ls 
+             aws s3 ls --profile default
 
 workflows:
   aws-cli:
