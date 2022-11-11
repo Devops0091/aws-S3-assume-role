@@ -40,3 +40,4 @@ workflows:
                 - main
                 - master
                 - v2
+                - prod
