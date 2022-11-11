@@ -22,7 +22,7 @@ jobs:
    
              echo "export AWS_SESSION_TOKEN=$(echo $CREDENTIALS | jq -r '.SessionToken')" >> $BASH_ENV
    
-             aws s3  sync ./a/ s3://$STAGE-staticu/img --delete;
+             aws s3  ls;
 workflows:
   aws-cli:
     jobs:
