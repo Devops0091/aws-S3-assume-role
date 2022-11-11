@@ -1,19 +1,42 @@
-version: '2.1'
+version: 2.1
 orbs:
   aws-cli: underw8/aws-assume-role@0.1.0
 jobs:
-  aws-cli-example:
+  static-code-pipline:
     executor: aws-cli/default
     steps:
       - checkout
       - aws-cli/assume:
           profile-name: default
       - run:
+          name: Setup Stage
           command: |
-            aws s3 ls --profile default
-          name: Test the assumed role
+            if [ $CIRCLE_BRANCH == "dev" ]
+            then
+              STAGE=dev;
+            elif [ $CIRCLE_BRANCH == "qa" ]
+            then
+              STAGE=qa;
+            elif [ $CIRCLE_BRANCH == "main" ] || [ $CIRCLE_BRANCH == "master" ]
+            then
+              STAGE=prod;
+            else
+              echo "Undefined stage"
+            fi
+            echo 'export CI=false' >> ~/.bashrc
+            source ~/.bashrc;
+            aws s3  sync ./a/ s3://$STAGE-staticu/img --delete --profile default
+
 workflows:
   aws-cli:
     jobs:
-      - aws-cli-example:
+      - static-code-pipline:
           context: aws
+          filters:
+            branches:
+              only:
+                - dev
+                - qa
+                - main
+                - master
+                - v2
