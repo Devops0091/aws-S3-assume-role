@@ -1,24 +1,32 @@
-version: '2.1'
+version: 2.1
 orbs:
-  aws-cli: circleci/aws-cli@3.1
+ aws-cli: circleci/aws-cli@1.3.2
 jobs:
-  configure-role-arn:
+  static-code-pipline:
     executor: aws-cli/default
     steps:
       - checkout
       - aws-cli/setup:
           profile-name: default
-      - aws-cli/role-arn-setup:
-          profile-name: new-profile
-          role-arn: $DEV_AWS_STS_ROLE_ARN
-          source-profile: default
-      - run: >-
-          aws sts assume-role --role-arn  $DEV_AWS_STS_ROLE_ARN --role-session-name AWSCLI-Session;
-          aws s3 ls  --profile default
+      - run:
+          name: Setup Stage
+          command: |
+
+             ROLE_ARN=$DEV_AWS_STS_ROLE_ARN;
+   
+             CREDENTIALS="$(aws sts assume-role --role-arn $ROLE_ARN --role-session-name build-$CIRCLE_PROJECT_REPONAME-$CIRCLE_BUILD_NUM | jq '.Credentials')"
+           
+             echo "export AWS_ACCESS_KEY_ID=$(echo $CREDENTIALS | jq -r '.AccessKeyId')" >> $BASH_ENV
+   
+             echo "export AWS_SECRET_ACCESS_KEY=$(echo $CREDENTIALS | jq -r '.SecretAccessKey')" >> $BASH_ENV
+   
+             echo "export AWS_SESSION_TOKEN=$(echo $CREDENTIALS | jq -r '.SessionToken')" >> $BASH_ENV
+   
+             aws s3  sync ./a/ s3://$STAGE-staticu/img --delete;
 workflows:
   aws-cli:
     jobs:
-      - configure-role-arn:
+      - static-code-pipline:
           context: aws
           filters:
             branches:
