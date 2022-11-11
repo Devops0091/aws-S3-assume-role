@@ -12,8 +12,8 @@ jobs:
           command: |
              if [ $CIRCLE_BRANCH == "dev" ]
              then
-               STAGE=dev;;
-               ROLE_ARN=$STAGE_AWS_STS_ROLE_ARN;
+               STAGE=dev;
+               ROLE_ARN=$DEV_AWS_STS_ROLE_ARN;
              elif [ $CIRCLE_BRANCH == "qa" ]
              then
                STAGE=qa;
