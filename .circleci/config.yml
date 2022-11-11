@@ -13,13 +13,13 @@ jobs:
           command: |
             if [ $CIRCLE_BRANCH == "dev" ]
             then
-              echo 'export STAGE=dev' >> ~/.bashrc
+              STAGE=dev;
             elif [ $CIRCLE_BRANCH == "qa" ]
             then
-              echo 'export STAGE=qa' >> ~/.bashrc
+              STAGE=qa;
             elif [ $CIRCLE_BRANCH == "main" ] || [ $CIRCLE_BRANCH == "master" ]
             then
-              echo 'export STAGE=prod' >> ~/.bashrc
+              STAGE=prod;
             else
               echo "Undefined stage"
             fi
